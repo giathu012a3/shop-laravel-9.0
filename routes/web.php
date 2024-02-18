@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\productController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeCotroller;
@@ -97,3 +98,4 @@ Route::post('/add_reply_product/{id}',[HomeCotroller::class,'add_reply_product']
 Route::get('view_product_category/{id}', [HomeCotroller::class,'view_product_category']);
 
 
+Route::post('/send-notification', [productController::class, 'sendNotification']);

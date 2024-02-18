@@ -33,7 +33,13 @@
                            <input type="number" name="quantity" value="1" min="1">
                            </div>
                            <div class="col-md-4">
-                           <input type="submit" value="Thêm vào giỏ hàng">
+                              @if ($products->quantity > 0)
+                              <!-- Nếu còn hàng, hiển thị nút đặt hàng -->
+                              <input type="submit" value="Thêm vào giỏ hàng">
+                          @else
+                              <!-- Nếu hết hàng, ẩn nút đặt hàng hoặc thay thế bằng một thông báo khác -->
+                              <span style="color: red;">Hết hàng</span>
+                          @endif
                            </div>
 
                         </div>

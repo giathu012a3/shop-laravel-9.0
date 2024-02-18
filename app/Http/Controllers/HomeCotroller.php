@@ -105,64 +105,70 @@ class HomeCotroller extends Controller
             $userid = $user->id;
             $product = Product::find($id);
             $product_exist_id = Cart::where('product_id', '=', $id)->where('user_id', '=', $userid)->get('id')->first();
-
-            if ($product_exist_id) {
-                $cart = Cart::find($product_exist_id)->first();
-                $quantity = $cart->quantity;
-                $cart->quantity = $quantity + $request->quantity;
-
-                if ($product->discount_price != null && $product->discount_price != 0) {
-
-                    $cart->price = $product->discount_price * $cart->quantity;
-                } else {
-
-                    $cart->price = $product->price * $cart->quantity;
-                }
-                $cart->save();
-
-                return redirect()->back()->with('message', 'Đã thêm sản phẩm vào giỏ hàng');
+    
+            // Lấy số lượng sản phẩm còn lại
+            $stock = $product->quantity;
+    
+            // Lấy số lượng sản phẩm mà khách hàng muốn mua
+            $quantity = $request->quantity;
+    
+            // Kiểm tra số lượng mua có vượt quá số lượng còn lại hay không
+            if ($quantity > $stock) {
+                // Nếu vượt quá, thông báo cho khách hàng biết và yêu cầu họ chọn số lượng nhỏ hơn
+                return redirect()->back()->with('message', 'Số lượng sản phẩm bạn muốn mua vượt quá số lượng còn lại. Vui lòng chọn số lượng nhỏ hơn hoặc sản phẩm khác.');
             } else {
-                $cart = new Cart;
-                $cart->name = $user->name;
-
-                $cart->email = $user->email;
-
-                $cart->phone = $user->phone;
-
-                $cart->address = $user->address;
-
-                $cart->user_id = $user->id;
-
-                $cart->product_title = $product->title;
-
-                $cart->product_id = $product->id;
-
-                if ($product->discount_price != null && $product->discount_price != 0) {
-
-                    $cart->price = $product->discount_price * $request->quantity;
+                // Nếu không vượt quá, tiếp tục thêm vào giỏ hàng như bình thường
+                if ($product_exist_id ) {
+                    $cart = Cart::find($product_exist_id)->first();
+                    $cart->quantity = $quantity + $request->quantity;
+    
+                    if ($product->discount_price != null && $product->discount_price != 0) {
+    
+                        $cart->price = $product->discount_price * $cart->quantity;
+                    } else {
+    
+                        $cart->price = $product->price * $cart->quantity;
+                    }
+                    $cart->save();
+    
+                    return redirect()->back()->with('message', 'Đã thêm sản phẩm vào giỏ hàng');
                 } else {
-
-                    $cart->price = $product->price * $request->quantity;
+                    $cart = new Cart;
+                    $cart->name = $user->name;
+    
+                    $cart->email = $user->email;
+    
+                    $cart->phone = $user->phone;
+    
+                    $cart->address = $user->address;
+    
+                    $cart->user_id = $user->id;
+    
+                    $cart->product_title = $product->title;
+    
+                    $cart->product_id = $product->id;
+    
+                    if ($product->discount_price != null && $product->discount_price != 0) {
+    
+                        $cart->price = $product->discount_price * $request->quantity;
+                    } else {
+    
+                        $cart->price = $product->price * $request->quantity;
+                    }
+    
+    
+                    $cart->image = $product->image;
+    
+                    $cart->quantity = $request->quantity;
+    
+                    $cart->save();
+    
+                    return redirect()->back()->with('message', 'Đã thêm sản phẩm vào giỏ hàng');
                 }
-
-
-                $cart->image = $product->image;
-
-                $cart->quantity = $request->quantity;
-
-                $cart->save();
-
-                return redirect()->back()->with('message', 'Đã thêm sản phẩm vào giỏ hàng');
             }
-
-
-
-
-
-        } else {
-            return redirect('login');
         }
     }
+    
 
     public function show_cart()
     {
@@ -186,46 +192,49 @@ class HomeCotroller extends Controller
     }
     public function cash_order()
     {
-        
-
         $user = Auth::user();
         $userid = $user->id;
-
+    
         $data = Cart::where('user_id', '=', $userid)->get();
-
+    
         foreach ($data as $data) {
             $order = new Order;
             $order->name = $data->name;
-
+    
             $order->email = $data->email;
-
+    
             $order->phone = $data->phone;
-
+    
             $order->address = $data->address;
-
+    
             $order->user_id = $data->user_id;
-
+    
             $order->product_title = $data->product_title;
-
+    
             $order->price = $data->price;
-
+    
             $order->quantity = $data->quantity;
-
+    
             $order->image = $data->image;
             $order->product_id = $data->product_id;
-
+    
             $order->payment_status = 'Thanh toán khi nhận hàng';
-
+    
             $order->delivery_status = 'Đang Xử lý';
-
+    
             $order->save();
-
+    
+            // Thêm đoạn code này để cập nhật số lượng tồn của sản phẩm
+            $product = Product::find($data->product_id);
+            $product->decrement('quantity', $data->quantity);
+    
             $cart_id = $data->id;
             $cart = Cart::find($cart_id);
             $cart->delete();
         }
         return redirect()->back()->with('message', 'Chúng tôi đã nhận được đơn hạng của bạn, Chúng tôi sẽ sớm kết nối tới bạn');
     }
+    
     public function stripe($totalprice)
     {
         $categories = Category::all();
@@ -305,7 +314,8 @@ class HomeCotroller extends Controller
     public function cancel_order($id)
     {
         $order = Order::find($id);
-
+        $product = Product::find($order->product_id);
+        $product->increment('quantity', $order->quantity);
         $order->delivery_status = 'Đơn hàng đã bị hủy';
         $order->save();
         return redirect()->back();

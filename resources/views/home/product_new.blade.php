@@ -25,12 +25,20 @@
                      <form action="{{ url('add_cart',$products->id) }}" method="POST">
                         @csrf
                         <div class="row">
+                           @if ($products->quantity > 0)
                            <div class="col-md-4">
                            <input type="number" name="quantity" value="1" min="1">
                            </div>
                            <div class="col-md-4">
-                           <input type="submit" value="Thêm vào giỏ hàng">
+                              <!-- Nếu còn hàng, hiển thị nút đặt hàng -->
+                              <input type="submit" value="Thêm vào giỏ hàng">
                            </div>
+                          @else
+                              <!-- Nếu hết hàng, ẩn nút đặt hàng hoặc thay thế bằng một thông báo khác -->
+                           <div class="col-md-12">
+                              <span style="color: red;">Hết hàng</span>
+                           </div>
+                          @endif
 
                         </div>
                      </form>
