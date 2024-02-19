@@ -1,8 +1,6 @@
-## Thành viên nhóm em gồm 
-1. Nguyễn Vũ Ngân Châu	MSSV:501220737
-2. Lê Hoàng Anh Quốc		MSSV:501220734
-3. Phạm Văn Tài	MSSV:501220744
-4. Nguyễn Gia Thụ MSSV:501220765
+
+
+
 
 ### Thay 
 MAIL_MAILER=smtp
