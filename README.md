@@ -15,11 +15,12 @@ MAIL_FROM_NAME="${APP_NAME}"
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=465
-MAIL_USERNAME=nguyengiathu24052004@gmail.com
-MAIL_PASSWORD=hvqdewbenwypicbc
+MAIL_USERNAME=gmail cua ban
+MAIL_PASSWORD=  pass
 MAIL_ENCRYPTION=ssl
-MAIL_FROM_ADDRESS="ngyengiathu24052004@gmail.com"
+MAIL_FROM_ADDRESS="gmail cua ban"
 MAIL_FROM_NAME="Ecommerce Mail"
+
 
 ## Chạy lệnh 
 Chạy lệnh composer install hoặc composer update
