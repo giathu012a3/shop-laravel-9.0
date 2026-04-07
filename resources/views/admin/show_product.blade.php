@@ -2,106 +2,166 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
-
     @include('admin.css')
     <style>
-        .font_size {
+        .page-header {
+            padding: 30px;
+            background: #191c24;
+            margin-bottom: 25px;
+            border-radius: 12px;
             text-align: center;
-            font-size: 44px;
-            padding-top: 20px;
         }
 
-        .center {
-            margin: auto;
-            /* width: 75%; */
-            text-align: center;
-            margin-top: 40px
+        .search-box {
+            background: #191c24;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            max-width: 800px;
+            margin: 0 auto 30px auto;
         }
 
-        .imgage_size {
-            width: 200px !important;
-            height: 150px !important;
-            border-radius: 0 !important;
+        .product-table-card {
+            background: #191c24;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .table thead th {
+            background: #0090e7;
+            color: white;
+            white-space: nowrap;
+            padding: 15px;
+            border: none;
+        }
+
+        .table tbody td {
+            color: #ffffff;
+            padding: 12px 15px;
+            vertical-align: middle;
+            border-top: 1px solid #2c2e33;
+        }
+
+        .product-image {
+            width: 100px !important;
+            height: 70px !important;
+            object-fit: cover !important;
+            border-radius: 8px !important;
+            transition: transform 0.3s;
+            border: 2px solid #2c2e33;
+        }
+
+        .product-image:hover {
+            transform: scale(1.5);
+            z-index: 10;
+        }
+
+        .input-style {
+            background: #2a3038 !important;
+            border: 1px solid #2c2e33 !important;
+            color: white !important;
+            height: 45px;
+        }
+
+        .badge-price {
+            font-size: 14px;
+            font-weight: 600;
         }
     </style>
 </head>
 
 <body>
     <div class="container-scroller">
-        <!-- partial:partials/_sidebar.html -->
         @include('admin.sidebar')
-        <!-- partial -->
         @include('admin.header')
-        <!-- partial -->
+        
         <div class="main-panel">
             <div class="content-wrapper">
+                
                 @if (session()->has('message'))
-                <div class="alert alert-success">
-                    <button class="close" data-dismiss="alert" aria-hidden="true">
-                        x
-                    </button>
-                    {{ session()->get('message') }}
+                    <div class="alert alert-success alert-dismissible fade show shadow" role="alert">
+                        <strong>Xác nhận:</strong> {{ session()->get('message') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
+                <div class="page-header">
+                    <h2 class="text-white"><i class="mdi mdi-format-list-bulleted"></i> DANH SÁCH TẤT CẢ SẢN PHẨM</h2>
                 </div>
-            @endif
-            <h1 class="font_size">Tất cả sản phẩm</h1>
-            <div style="margin-left: 450px;padding-bottom: 30px">
-                <form action="{{ url('search_product_admin') }}" method="GET">
-                    @csrf
-                    <input type="text" style="width: 450px; color: black" name="search_products"
-                        placeholder="Tìm kiếm cái gì đó ở đây">
-                    <input type="submit" value="Search" id="" class="btn btn-primary">
-                </form>
-            </div>
-                <table class="center table text-white">
-                    <tr>
-                        <th>Tên Sản Phẩm</th>
-                        {{-- <th>Mô tả</th> --}}
-                        <th>Số lượng</th>
-                        <th>Danh Mục</th>
-                        <th>Giá</th>
-                        <th>Giá Giảm</th>
-                        <th>Ảnh sản phẩm</th>
-                        <th>Xóa</th>
-                        <th>Sửa</th>
-                    </tr>
-                    @forelse ($products as $product)
-                        <tr>
-                            <td>{{ $product->title }}</td>
-                            {{-- <td style="max-width: 150px;">{{ $product->description }}</td> --}}
-                            <td>{{ $product->quantity }}</td>
-                            <td>{{ $product->category }}</td>
-                            <td>{{ $product->price }}</td>
-                            @if ($product->discount_price!=null)
-                                
-                            <td>{{ $product->discount_price }}</td>
-                            @else
-                            <td>Sản phẩm chưa có giảm giá</td>
 
-                            @endif
-                            <td>
-                                <img class="imgage_size" src="product/{{ $product->image }}" alt="">
-                            </td>
-                            <td>
-                                <a onclick="return confirm('Bạn chắc chắc muốn xóa không')" class="btn btn-danger" href="{{ url('/delete_product', $product->id) }}">Xóa</a>
-                            </td>
-                            <td><a class="btn btn-success" href="{{ url('/update_product', $product->id) }}">Cập Nhập</a></td>
+                <div class="search-box">
+                    <form action="{{ url('search_product_admin') }}" method="GET" class="d-flex align-items-center">
+                        @csrf
+                        <input type="text" class="form-control input-style mr-2" name="search_products"
+                            placeholder="🔍 Tìm theo tên sản phẩm hoặc danh mục...">
+                        <button type="submit" class="btn btn-info btn-lg px-4"><i class="mdi mdi-magnify"></i> Tìm kiếm</button>
+                    </form>
+                </div>
 
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="8">Không tìm thấy dữ liệu</td>
-                        </tr>
+                <div class="product-table-card">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Tên Sản Phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Danh Mục</th>
+                                <th>Giá gốc</th>
+                                <th>Khuyến mãi</th>
+                                <th>Hình ảnh</th>
+                                <th colspan="2">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($products as $product)
+                                <tr class="text-center">
+                                    <td class="text-left font-weight-bold">{{ $product->title }}</td>
+                                    <td><span class="badge badge-outline-warning">{{ $product->quantity }}</span></td>
+                                    <td><span class="badge badge-outline-success">{{ $product->category }}</span></td>
+                                    <td class="text-primary font-weight-bold">{{ number_format($product->price) }} đ</td>
+                                    <td>
+                                        @if ($product->discount_price != null && $product->discount_price > 0)
+                                            <span class="text-danger font-weight-bold">{{ number_format($product->discount_price) }} đ</span>
+                                        @else
+                                            <span class="text-muted small">Không giảm giá</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <img class="product-image shadow-sm" src="product/{{ $product->image }}" alt="Sản phẩm">
+                                    </td>
+                                    <td>
+                                        <a onclick="return confirm('Bạn chắc chắn muốn xóa không?')" 
+                                           class="btn btn-outline-danger btn-sm" 
+                                           href="{{ url('/delete_product', $product->id) }}">
+                                            <i class="mdi mdi-delete"></i> Xóa
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-outline-success btn-sm" 
+                                           href="{{ url('/update_product', $product->id) }}">
+                                            <i class="mdi mdi-pencil"></i> Sửa
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="py-5 text-center text-muted italic">
+                                        <i class="mdi mdi-information-outline"></i> Không tìm thấy sản phẩm nào phù hợp
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
 
-                    @endforelse
-                </table>
             </div>
         </div>
+    </div>
 
-        <!-- container-scroller -->
-        <!-- plugins:js -->
-
-        @include('admin.script')
+    @include('admin.script')
 </body>
 
 </html>
