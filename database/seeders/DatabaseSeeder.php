@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             'usertype' => '1', // Giá trị 1 là Admin
             'password' => bcrypt('12345678'),
             'phone' => '0987654321',
-            'address' => 'Hà Nội, Việt Nam'
+            'address' => 'Hà Nội, Việt Nam',
+            'email_verified_at' => now(), // Đánh dấu đã xác thực email
         ]);
 
         // 2. Tạo thêm 5 khách hàng mẫu
@@ -32,7 +33,8 @@ class DatabaseSeeder extends Seeder
                 'usertype' => '0', // Giá trị 0 là Người dùng thường
                 'password' => bcrypt('12345678'),
                 'phone' => '012345678' . $i,
-                'address' => 'Địa chỉ khách hàng ' . $i
+                'address' => 'Địa chỉ khách hàng ' . $i,
+                'email_verified_at' => now(), // Đánh dấu đã xác thực email
             ]);
         }
 
