@@ -101,6 +101,9 @@ class HomeCotroller extends Controller
     public function add_cart(Request $request, $id)
     {
         if (Auth::id()) {
+            $request->validate([
+                'quantity' => 'required|numeric|min:1',
+            ]);
             $user = Auth::user();
             $userid = $user->id;
             $product = Product::find($id);
@@ -324,6 +327,9 @@ class HomeCotroller extends Controller
     public function add_comment(Request $request)
     {
         if (Auth::id()) {
+            $request->validate([
+                'comment' => 'required|string|max:1000',
+            ]);
             $comment = new Comment;
 
             $comment->name = Auth::user()->name;
@@ -339,6 +345,9 @@ class HomeCotroller extends Controller
     public function add_product_comment(Request $request, $id)
     {
         if (Auth::id()) {
+            $request->validate([
+                'comment' => 'required|string|max:1000',
+            ]);
             $comment_product = new Comment_product;
 
             $comment_product->name = Auth::user()->name;
@@ -355,6 +364,9 @@ class HomeCotroller extends Controller
     public function add_reply(Request $request)
     {
         if (Auth::id()) {
+            $request->validate([
+                'reply' => 'required|string|max:1000',
+            ]);
             $replay = new Reply;
             $replay->name = Auth::user()->name;
             $replay->user_id = Auth::user()->id;
@@ -372,6 +384,9 @@ class HomeCotroller extends Controller
     public function add_reply_product(Request $request, $id)
     {
         if (Auth::id()) {
+            $request->validate([
+                'reply' => 'required|string|max:1000',
+            ]);
             $replay = new Reply_Comment_product;
             $replay->name = Auth::user()->name;
             $replay->user_id = Auth::user()->id;

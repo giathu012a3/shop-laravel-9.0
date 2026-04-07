@@ -1,85 +1,52 @@
-# Shop Laravel 9.0
+# 🛒 Dự án Shop Laravel 9.0 (Phoenix) 🚀
 
-Ứng dụng được xây dựng với Laravel 9.0. Hướng dẫn này sẽ giúp bạn thiết lập và chạy dự án trên máy cá nhân.
+Website bán hàng chuyên nghiệp, được tối ưu hóa giao diện và bảo mật dữ liệu.
 
-## Yêu cầu tiên quyết
+## 🌟 Tính năng nổi bật đã cập nhật
+- **Môi trường cực nhanh**: Chạy trên **Laravel Herd** (Windows).
+- **Dữ liệu mẫu (Seeding)**: Tự động tạo hàng chục sản phẩm, danh mục và tài khoản mẫu.
+- **Bảo mật (Validation)**: Kiểm soát chặt chẽ dữ liệu đầu vào cho cả Admin và Khách hàng.
+- **Tối ưu hóa PHP 8.4**: Đã xử lý các cảnh báo lỗi thời (Deprecated) để web chạy mượt mà nhất.
 
-Trước khi bắt đầu, hãy đảm bảo bạn đã cài đặt những thứ sau trên máy của mình:
+## 🛠 Hướng dẫn cài đặt nhanh
 
--   [PHP](https://www.php.net/downloads) >= 8.0
--   [Composer](https://getcomposer.org/)
--   [Node.js](https://nodejs.org/) & NPM
--   [MySQL](https://www.mysql.com/) hoặc MariaDB
+### 1. Chuẩn bị
+- Cài đặt **Laravel Herd** (Windows) để có PHP >= 8.1 và Nginx.
+- Cài đặt **Node.js** (để chạy npm).
+- Chuẩn bị **MySQL** (MySQL Workbench).
 
-## Cài đặt
+### 2. Các bước thiết lập
+Mở Terminal tại thư mục dự án:
 
-Làm theo các bước sau để thiết lập dự án:
+1. **Cài đặt thư viện:**
+   ```bash
+   composer install
+   npm install
+   ```
 
-### 1. Clone Repository (Tải mã nguồn)
-Clone repository này về máy của bạn.
+2. **Cấu hình Database:**
+   - Tạo file `.env` (nếu chưa có): `copy .env.example .env`
+   - Sửa thông số `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` trong `.env` cho khớp với MySQL của bạn.
 
-### 2. Cài đặt Backend Dependencies
-Mở terminal tại thư mục dự án và chạy lệnh:
+3. **Khởi tạo dữ liệu:**
+   ```bash
+   php artisan key:generate
+   php artisan migrate:fresh --seed
+   ```
 
-```bash
-composer install
-```
+4. **Biên dịch Giao diện:**
+   ```bash
+   npm run prod
+   ```
 
-### 3. Cấu hình Môi trường
-Sao chép tệp môi trường mẫu để tạo tệp `.env` của riêng bạn:
+### 3. Cách chạy và Đăng nhập
+- Truy cập web tại: 👉 **[http://shop-laravel-9.0.test](http://shop-laravel-9.0.test)**
 
-```bash
-cp .env.example .env
-```
-*Trên Windows (Command Prompt):* `copy .env.example .env`
+#### 🔑 Tài khoản thử nghiệm:
+| Vai trò | Email | Mật khẩu |
+| :--- | :--- | :--- |
+| **Admin** | `admin@gmail.com` | `12345678` |
+| **User** | `user1@gmail.com` | `12345678` |
 
-Mở tệp `.env` và cấu hình thông tin kết nối cơ sở dữ liệu của bạn:
-
-```dotenv
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=ten_database_cua_ban
-DB_USERNAME=user_database_cua_ban
-DB_PASSWORD=pass_database_cua_ban
-```
-
-### 4. Tạo Key Ứng dụng
-Tạo khóa mã hóa ứng dụng:
-
-```bash
-php artisan key:generate
-```
-
-### 5. Chạy Database Migrations
-Tạo các bảng cơ sở dữ liệu:
-
-```bash
-php artisan migrate
-```
-
-### 6. Cài đặt Frontend Dependencies & Build
-Dự án này sử dụng Laravel Mix để biên dịch assets.
-
-```bash
-npm install
-npm run dev
-```
-
-## Chạy Ứng dụng
-
-Khởi động server phát triển cục bộ:
-
-```bash
-php artisan serve
-```
-
-Ứng dụng sẽ có thể truy cập tại [http://localhost:8000](http://localhost:8000).
-
-## Thông tin thêm
-
--   **Cấu hình Mail**: Để kiểm tra chức năng gửi email cục bộ, bạn có thể sử dụng [Mailhog](https://github.com/mailhog/MailHog) hoặc cấu hình SMTP của bạn trong `.env`.
--   **Storage Link**: Nếu bạn gặp vấn đề ảnh không hiển thị, bạn có thể cần liên kết thư mục storage:
-    ```bash
-    php artisan storage:link
-    ```
+---
+*Dự án đã sẵn sàng để phát triển và sử dụng!*

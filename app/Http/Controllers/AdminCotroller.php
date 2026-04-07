@@ -47,6 +47,12 @@ class AdminCotroller extends Controller
             $usertype = Auth::user()->usertype;
 
             if ($usertype == '1') {
+                $request->validate([
+                    'category' => 'required|string|max:255',
+                ], [
+                    'category.required' => 'Vui lòng nhập tên danh mục',
+                ]);
+
                 $data = new Category;
                 $data->category_name = $request->category;
 
@@ -120,6 +126,20 @@ class AdminCotroller extends Controller
             $usertype = Auth::user()->usertype;
 
             if ($usertype == '1') {
+                $request->validate([
+                    'title' => 'required',
+                    'description' => 'required',
+                    'price' => 'required|numeric',
+                    'quantity' => 'required|numeric',
+                    'category' => 'required',
+                    'image' => 'required|image',
+                ], [
+                    'title.required' => 'Vui lòng nhập tên sản phẩm',
+                    'price.required' => 'Vui lòng nhập giá sản phẩm',
+                    'price.numeric' => 'Giá sản phẩm phải là số',
+                    'image.required' => 'Vui lòng chọn hình ảnh',
+                ]);
+
                 $product = new Product;
 
                 $product->title = $request->title;
@@ -283,6 +303,13 @@ class AdminCotroller extends Controller
             $usertype = Auth::user()->usertype;
 
             if ($usertype == '1') {
+                $request->validate([
+                    'title' => 'required',
+                    'description' => 'required',
+                    'price' => 'required|numeric',
+                    'quantity' => 'required|numeric',
+                ]);
+
                 $product = Product::find($id);
                 $product->title = $request->title;
 
