@@ -50,10 +50,7 @@ class OrderController extends Controller
         }
 
         try {
-            // Thanh toán qua Stripe
             $this->stripeService->charge($totalprice, $request->stripeToken);
-
-            // Tạo hóa đơn và giải phóng giỏ hàng
             $this->orderService->createFromCart(Auth::user(), 'Đã Thanh toán');
 
             Session::flash('success', 'Thanh toán thành công');
