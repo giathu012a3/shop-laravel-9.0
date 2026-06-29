@@ -11,14 +11,6 @@ use Exception;
 
 class OrderService
 {
-    /**
-     * Tạo đơn hàng từ giỏ hàng
-     *
-     * @param User $user
-     * @param string $paymentStatus
-     * @return void
-     * @throws Exception
-     */
     public function createFromCart(User $user, string $paymentStatus)
     {
         $cartItems = Cart::where('user_id', $user->id)->get();
@@ -29,7 +21,6 @@ class OrderService
 
         DB::transaction(function () use ($cartItems, $paymentStatus) {
             foreach ($cartItems as $item) {
-                // Tạo order mới
                 Order::create([
                     'name' => $item->name,
                     'email' => $item->email,
@@ -45,25 +36,16 @@ class OrderService
                     'delivery_status' => 'Đang Xử lý',
                 ]);
 
-                // Cập nhật số lượng tồn kho của sản phẩm
                 $product = Product::find($item->product_id);
                 if ($product) {
                     $product->decrement('quantity', $item->quantity);
                 }
 
-                // Xóa khỏi giỏ hàng
                 $item->delete();
             }
         });
     }
 
-    /**
-     * Hủy đơn hàng
-     *
-     * @param int $orderId
-     * @return bool
-     * @throws Exception
-     */
     public function cancel(int $orderId)
     {
         return DB::transaction(function () use ($orderId) {
@@ -76,7 +58,6 @@ class OrderService
                 return false;
             }
 
-            // Hoàn lại số lượng tồn kho cho sản phẩm
             $product = Product::find($order->product_id);
             if ($product) {
                 $product->increment('quantity', $order->quantity);

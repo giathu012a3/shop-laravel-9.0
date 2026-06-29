@@ -8,15 +8,6 @@ use Exception;
 
 class StripeService
 {
-    /**
-     * Thực hiện thanh toán qua Stripe
-     *
-     * @param float $amount
-     * @param string $token
-     * @param string $description
-     * @return Charge
-     * @throws Exception
-     */
     public function charge(float $amount, string $token, string $description = 'Cảm ơn vì đã thanh toán trước')
     {
         $stripeSecret = env('STRIPE_SECRET');
@@ -27,7 +18,7 @@ class StripeService
         Stripe::setApiKey($stripeSecret);
 
         return Charge::create([
-            "amount" => $amount * 100, // Stripe tính bằng cent
+            "amount" => $amount * 100,
             "currency" => "usd",
             "source" => $token,
             "description" => $description
