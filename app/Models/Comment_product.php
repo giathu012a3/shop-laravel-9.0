@@ -7,9 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment_product extends Model
 {
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'comments',
+        'user_id',
+        'product_id',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
-    use HasFactory;
+
+    public function replies()
+    {
+        return $this->hasMany(Reply_Comment_product::class, 'comments_product_id');
+    }
 }
